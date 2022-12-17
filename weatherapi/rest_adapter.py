@@ -32,5 +32,5 @@ class RestAdapter:
         data_out = response.json()
         if response.status_code >= 200 and response.status_code <= 299:
             return data_out
-        #raise Exception(data_out["message"])
+        raise Exception(data_out["message"])
 # def getWeather(q,lang,rows=10,start,sort="date",facets=)
