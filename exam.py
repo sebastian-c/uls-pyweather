@@ -105,30 +105,39 @@ november_results[["date", "t_c"]].dropna().groupby(pd.Grouper(freq="D", key="dat
 #Missing values for 26th and 27th in the source data
 p.pause("Make graphs")
 
+os.makedirs("images", exist_ok=True)
+
+PLOT_WIDTH=10
+PLOT_HEIGHT=7
+DPI=250
+
 # Temperature
-tmp = plt.figure()
-tmp.set_figwidth(10*1.618)
-tmp.set_figwidth(10)
+plt.figure(figsize=(PLOT_WIDTH,PLOT_HEIGHT), dpi=DPI)
 plt.plot(november_results["date"], november_results["t_c"], "r-")
 plt.xticks(rotation=45, ha='right')
 plt.xlabel("date")
 plt.ylabel("Temperature (°C)")
 plt.suptitle("Average November 2022 Temperature in Rouen")
 plt.text(pd.Timestamp("2022-11-26"),12, "This line artifact is\ndue to missing data\non 26-27 November")
+plt.savefig("images/rouen_temperature.png")
 
 #Rainfall
-tmp = plt.figure()
-tmp.set_figwidth(10*1.618)
-tmp.set_figwidth(10)
+plt.figure(figsize=(PLOT_WIDTH,PLOT_HEIGHT), dpi=DPI)
 rain_data = november_results[["date", "rr3"]].groupby(pd.Grouper(freq="D", key="date", axis = 0)).sum()
 plt.bar(rain_data.index, rain_data["rr3"])
 plt.xticks(rotation=45, ha='right')
 plt.xlabel("date")
 plt.ylabel("Rainfall (mm)")
 plt.suptitle("Daily November 2022 Rainfall in Rouen")
+plt.savefig("images/rouen_rainfall.png")
 
 p.pause("Write to csv")
 
 november_results.to_csv("data/november_2022_Rouen_weather.csv")
 
-#p.pause
+p.pause("Write to html")
+
+html_template = f"<html><title>Weather data</title><body>{november_results.to_html()}<p><img src = 'images/rouen_temperature.png' width=1000 height=700><p><img src='images/rouen_rainfall.png' width=1000 height=700></body></html>"
+
+with open("data/weather_data.html", "w") as f:
+    f.write(html_template)
