@@ -1,6 +1,7 @@
 .spyproject/
 
-__pycache__/*
-weatherapi/__pycache__/*
+__pycache__/
+weatherapi/__pycache__/
+data/
 
 *.pdf
